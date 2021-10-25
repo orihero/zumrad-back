@@ -2,36 +2,37 @@ package controller
 
 import (
 	"encoding/json"
-
+	"fmt"
 	"net/http"
 	"zumrad/database"
 	"zumrad/models"
 )
 
-func GetProducts(w http.ResponseWriter, r *http.Request) {
+func GetOrders(w http.ResponseWriter, r *http.Request) {
 	connection := database.GetDatabase()
 	defer database.CloseDatabase(connection)
-	var products []models.Product
-	connection.Preload("Color").Preload("Characteristic").Preload("Sizes").Find(&products)
+	var orders []models.Order
+	connection.Preload("Client").Preload("Location").Find(&orders)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(products)
+	json.NewEncoder(w).Encode(orders)
 }
 
-func CreateProduct(w http.ResponseWriter, r *http.Request) {
+func CreateOrder(w http.ResponseWriter, r *http.Request) {
 	connection := database.GetDatabase()
 	defer database.CloseDatabase(connection)
-	var product models.Product
-	err := json.NewDecoder(r.Body).Decode(&product)
+	var order models.Order
+	err := json.NewDecoder(r.Body).Decode(&order)
 	if err != nil {
 		error := models.Error{IsError: true, Message: "Unproccessable entity"}
+		fmt.Println(err)
 		w.Header().Set("Content-type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(error)
 		return
 	}
 
-	connection.Create(&product)
+	connection.Create(&order)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(product)
+	json.NewEncoder(w).Encode(order)
 
 }

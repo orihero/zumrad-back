@@ -28,6 +28,9 @@ func InitialMigration() {
 	connection := GetDatabase()
 	// defer CloseDatabase(connection)
 	_ = connection.AutoMigrate(models.Product{})
+	_ = connection.AutoMigrate(models.Order{})
+	_ = connection.AutoMigrate(models.User{})
+	_ = connection.AutoMigrate(models.Location{})
 }
 
 //closes database connection

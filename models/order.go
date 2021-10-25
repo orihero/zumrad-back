@@ -12,9 +12,21 @@ type Order struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 	Client    User           `json:"client"`
-	Quantity  uint           `json:"quantity"`
+	ClientId  uint           `json:"client_id"`
 	Note      string         `json:"note"`
 	Status    string         `json:"stasus"`
+	Address   string         `json:"address"`
+	Location  Location       `json:"location"`
+}
+
+type Location struct {
+	Id        uint           `gorm:"primaryKey;autoIncrement:true" json:"id"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted_at"`
+	Latitude  float64        `json:"latitude"`
+	Longitude float64        `json:"longitude"`
+	OrderId   uint           `json:"orderid"`
 }
 
 const (
